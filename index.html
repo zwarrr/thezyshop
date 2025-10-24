@@ -63,7 +63,7 @@
       </a>
 
       <!-- Card 2 -->
-      <a href="/card_product_shoope_0_251-500.html" class="card-link relative rounded-lg overflow-hidden" data-range="251 – 500">
+      <a href="/card_product_shoope_0_251-500" class="card-link relative rounded-lg overflow-hidden" data-range="251 – 500">
         <img src="https://placehold.co/300x300?text=251-500" alt="251-500" class="w-full h-full object-cover">
         <div class="absolute bottom-0 w-full bg-black text-white text-xs text-center py-1">251 – 500</div>
       </a>
@@ -139,11 +139,6 @@
 
     // Detect card links and check if page exists
     function setupCardLinkDetection() {
-      // Define which pages already exist
-      const existingPages = [
-        '/card_product_shoope_0_250'
-      ];
-
       const cardLinks = document.querySelectorAll('.card-link');
       cardLinks.forEach(link => {
         link.addEventListener('click', async (e) => {
@@ -151,13 +146,14 @@
           const href = link.getAttribute('href');
           const range = link.getAttribute('data-range');
           
-          // Check if page exists in our list
-          if (existingPages.includes(href)) {
-            // Page exists, navigate
-            window.location.pathname = href;
+          // Check if href punya .html
+          if (href.endsWith('.html')) {
+            // Ada .html → langsung redirect
+            console.log(`Redirecting to ${href}`);
+            window.location.href = href;
           } else {
-            // Page doesn't exist yet, show coming soon modal
-            console.log(`Opening modal for ${range}`);
+            // Tidak ada .html → muncul modal
+            console.log(`No .html found, opening modal for ${range}`);
             openComingSoonModal(range);
           }
         });
