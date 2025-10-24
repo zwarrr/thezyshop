@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kategori - Zya's Placeshop</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 10;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header & Category Tabs Component -->
+  <div id="headerContainer" class="sticky-header pb-4 pt-4">
+    <!-- Header with Back & Share Button -->
+    <div class="flex items-center justify-between mb-4 px-3 sm:px-4">
+      <div class="flex items-center gap-2">
+        <a href="/" class="p-2 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 cursor-pointer" title="Back to home">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </a>
+        <h1 class="text-xl sm:text-2xl font-bold">Products</h1>
+      </div>
+      <button id="shareBtn" class="p-2 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer" title="Share this page" onclick="shareThisPage()">
+        <img src="share.svg" alt="Share" class="w-5 h-5">
+      </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mb-4 px-3 sm:px-4">
+      <input type="text" id="searchProducts" placeholder="Cari Produk" class="w-full px-4 py-3 bg-gray-200 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black transition-all">
+    </div>
+
+    <!-- Category Tabs -->
+    <div id="categoryTabs" class="flex justify-center gap-6 pb-4 border-b border-gray-200">
+      <button class="category-tab-btn active text-red-600 font-semibold text-sm whitespace-nowrap pb-2 border-b-2 border-red-600" data-category="shoope" data-path="/card_product_shoope_0_250">
+        Shoope
+      </button>
+      <button class="category-tab-btn text-gray-600 font-semibold text-sm whitespace-nowrap pb-2 border-b-2 border-transparent hover:text-black transition-colors" data-category="tiktok" data-path="/card_product_tiktok_0_250">
+        Tiktok Shop
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function shareThisPage() {
+      const pageTitle = document.title;
+      const pageUrl = window.location.href;
+      if (navigator.share) {
+        navigator.share({title: pageTitle, text: 'Check out our amazing products!', url: pageUrl}).catch(err => console.log('Error sharing:', err));
+      } else {
+        const textToCopy = `${pageTitle}\n${pageUrl}`;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          alert('Link copied to clipboard!');
+        }).catch(err => {
+          console.log('Error copying to clipboard:', err);
+          alert(`Share this link:\n${pageUrl}`);
+        });
+      }
+    }
+
+    // Setup category tabs
+    function setupCategoryTabs() {
+      const tabButtons = document.querySelectorAll('.category-tab-btn');
+      tabButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          // Remove active state from all buttons
+          tabButtons.forEach(b => {
+            b.classList.remove('text-red-600', 'border-red-600', 'active');
+            b.classList.add('text-gray-600', 'border-transparent');
+          });
+          // Add active state to clicked button
+          btn.classList.add('text-red-600', 'border-red-600', 'active');
+          btn.classList.remove('text-gray-600', 'border-transparent');
+          // Navigate to category
+          const path = btn.getAttribute('data-path');
+          window.location.pathname = path;
+        });
+      });
+    }
+
+    // Initialize tabs when script loads
+    setupCategoryTabs();
+  </script>
+</body>
+</html>
