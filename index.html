@@ -57,25 +57,25 @@
     <!-- Grid Cards -->
     <section class="grid grid-cols-2 gap-x-4 gap-y-5 mb-20">
       <!-- Card 1 -->
-      <a href="/card_product_shoope_0_250.html" class="relative rounded-lg overflow-hidden">
+      <a href="/card_product_shoope_0_250" class="card-link relative rounded-lg overflow-hidden" data-range="001 – 250">
         <img src="https://placehold.co/300x300?text=001-250" alt="001-250" class="w-full h-full object-cover">
         <div class="absolute bottom-0 w-full bg-black text-white text-xs text-center py-1">001 – 250</div>
       </a>
 
       <!-- Card 2 -->
-      <a href="/card_product_shoope_0_250.html" class="relative rounded-lg overflow-hidden">
+      <a href="/card_product_shoope_0_251-500" class="card-link relative rounded-lg overflow-hidden" data-range="251 – 500">
         <img src="https://placehold.co/300x300?text=251-500" alt="251-500" class="w-full h-full object-cover">
         <div class="absolute bottom-0 w-full bg-black text-white text-xs text-center py-1">251 – 500</div>
       </a>
 
       <!-- Card 3 (Tambahan jarak atas) -->
-      <a href="/card_product_shoope_0_250" class="relative rounded-lg overflow-hidden mt-6">
+      <a href="/card_product_shoope_0_501-725" class="card-link relative rounded-lg overflow-hidden mt-6" data-range="501 – 725">
         <img src="https://placehold.co/300x300?text=501-725" alt="501-725" class="w-full h-full object-cover">
         <div class="absolute bottom-0 w-full bg-black text-white text-xs text-center py-1">501 – 725</div>
       </a>
 
       <!-- Card 4 (Tambahan jarak atas) -->
-      <a href="/card_product_shoope_0_250" class="relative rounded-lg overflow-hidden mt-6">
+      <a href="/card_product_shoope_0_752-1000" class="card-link relative rounded-lg overflow-hidden mt-6" data-range="752 – 1000">
         <img src="https://placehold.co/300x300?text=752-1000" alt="752-1000" class="w-full h-full object-cover">
         <div class="absolute bottom-0 w-full bg-black text-white text-xs text-center py-1">752 – 1000</div>
       </a>
@@ -83,7 +83,87 @@
 
   </main>
 
+  <!-- Load Coming Soon Modal -->
+  <div id="modalContainer"></div>
+
   <script>
+    let modalReady = false;
+
+    // Placeholder function - will be replaced when modal loads
+    function openComingSoonModal(range) {
+      if (!modalReady) {
+        console.log('Modal not ready yet, waiting...');
+        setTimeout(() => openComingSoonModal(range), 100);
+        return;
+      }
+      
+      const modal = document.getElementById('comingSoonModal');
+      const rangeElement = document.getElementById('productRange');
+      
+      if (rangeElement) {
+        rangeElement.textContent = range;
+      }
+      
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeComingSoonModal() {
+      const modal = document.getElementById('comingSoonModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    // Load coming soon modal
+    async function loadComingSoonModal() {
+      try {
+        const response = await fetch('modal_information_product_comingsoon.html');
+        const html = await response.text();
+        const container = document.getElementById('modalContainer');
+        container.innerHTML = html;
+        
+        // Wait a bit for modal DOM to be ready
+        setTimeout(() => {
+          modalReady = true;
+          setupCardLinkDetection();
+          console.log('Modal loaded and ready');
+        }, 100);
+      } catch (err) {
+        console.error('Failed to load modal:', err);
+      }
+    }
+
+    // Detect card links and check if page exists
+    function setupCardLinkDetection() {
+      // Define which pages already exist
+      const existingPages = [
+        '/card_product_shoope_0_250'
+      ];
+
+      const cardLinks = document.querySelectorAll('.card-link');
+      cardLinks.forEach(link => {
+        link.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+          const range = link.getAttribute('data-range');
+          
+          // Check if page exists in our list
+          if (existingPages.includes(href)) {
+            // Page exists, navigate
+            window.location.pathname = href;
+          } else {
+            // Page doesn't exist yet, show coming soon modal
+            console.log(`Opening modal for ${range}`);
+            openComingSoonModal(range);
+          }
+        });
+      });
+    }
+
     function shareThisPage() {
       const pageTitle = document.title;
       const pageUrl = window.location.href;
@@ -107,6 +187,11 @@
         });
       }
     }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadComingSoonModal();
+    });
   </script>
 
 </body>
